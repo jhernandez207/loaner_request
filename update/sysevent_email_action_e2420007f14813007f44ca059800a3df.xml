@@ -4,7 +4,31 @@
         <action_insert>false</action_insert>
         <action_update>false</action_update>
         <active>true</active>
-        <advanced_condition/>
+        <advanced_condition><![CDATA[
+(function executeRule(current, previous /*null when async*/) {
+	if(current.item_type == "cmdb_ci_computer")
+		{
+		var request = new sn_ws.RESTMessageV2();
+		request.setEndpoint('https://appdevfeb4sct-test-018.lab.service-now.com/api/now/table/u_password_vault?sysparm_query=u_asset%3D%3Cthe%20asset%20value%20of%20your%20choice%20from%20the%20Password%20Vault%20table%3E'+current.cmdb_ci.asset_tag + '&sysparm_fields=u_password&sysparm_limit=1');
+		
+		request.setHttpMethod('GET');
+		
+		//Eg. UserName="admin", Password="admin" for this code sample.
+		var user = 'admin';
+		var password = 'admin';
+		
+		request.setBasicAuth(user,password);
+		request.setRequestHeader("Accept","application/json");
+		
+		var response = request.execute();
+		gs.info(response.getBody());
+		
+		var obj = JSON.parse(response.getBody());
+		var myPass = obj.result[0].u_password;
+		gs.info('u_password: ' +myPass);
+		
+		
+	}})(current, previous);]]></advanced_condition>
         <affected_field_on_event/>
         <category display_value="Uncategorized">c97d83137f4432005f58108c3ffa917a</category>
         <collection>x_snc_loaner_reque_loaner_request</collection>
@@ -50,7 +74,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>e2420007f14813007f44ca059800a3df</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_name>Loaner Item Pick Up</sys_name>
         <sys_overrides/>
         <sys_package display_value="Loaner Request" source="x_snc_loaner_reque">7fd16c22f1c013007f44ca059800a339</sys_package>
@@ -58,7 +82,7 @@
         <sys_scope display_value="Loaner Request">7fd16c22f1c013007f44ca059800a339</sys_scope>
         <sys_update_name>sysevent_email_action_e2420007f14813007f44ca059800a3df</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2018-02-07 06:22:22</sys_updated_on>
+        <sys_updated_on>2018-02-07 17:24:53</sys_updated_on>
         <sys_version>2</sys_version>
         <template display_value="Unsubscribe and Preferences">7ed0481f3b0b2200c869c2c703efc487</template>
         <type>email</type>
